@@ -53,7 +53,12 @@ func main() {
 	routerv1.Get("/healthz", handlerReadiness)
 	routerv1.Get("/err", handleErr)
 	routerv1.Post("/users", apiCfg.handlerCreateUser)
-	routerv1.Get("/users", apiCfg.handlerGetUser)
+	routerv1.Get("/users", apiCfg.middlewareAuth(apiCfg.handlerGetUser))
+	routerv1.Post("/feeds", apiCfg.middlewareAuth(apiCfg.handlerCreateFeed))
+	routerv1.Get("/feeds", apiCfg.handlerGetFeeds)
+	routerv1.Post("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerCreateFeedFollow))
+	routerv1.Get("/feed_follows", apiCfg.middlewareAuth(apiCfg.handlerGetFeedFollows))
+	routerv1.Delete("/feed_follows/{feedFollowID}", apiCfg.middlewareAuth(apiCfg.handlerDeleteFeedFollow))
 
 	router.Mount("/v1", routerv1)
 
